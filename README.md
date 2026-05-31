@@ -56,7 +56,7 @@ All server logic uses **`lib.callback`** (no business logic over net events). Ke
 
 <img src="docs/screenshots/active.png" alt="CityRentals active rental" width="280"/>
 &nbsp;&nbsp;
-<img src="docs/screenshots/history.png" alt="CityRentals NPC delivery" width="280"/>
+<img src="docs/screenshots/historyy.png" alt="CityRentals NPC delivery" width="280"/>
 
 </div>
 
