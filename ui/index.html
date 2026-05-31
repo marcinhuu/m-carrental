@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CityRentals</title>
+    <link rel="stylesheet" href="colors.css" />
+    <link rel="stylesheet" href="frame.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div id="phone-wrapper">
+<div class="app" id="content" data-theme="dark">
+    <div class="app-splash" id="app-splash" aria-hidden="false">
+        <div class="splash-bg"></div>
+        <div class="splash-inner">
+            <div class="splash-icon-wrap">
+                <span class="splash-icon">CR</span>
+            </div>
+            <h1 class="splash-title" id="splash-title"></h1>
+            <p class="splash-tagline">
+                <span id="splash-typewriter"></span><span class="splash-cursor" aria-hidden="true"></span>
+            </p>
+        </div>
+    </div>
+
+    <header class="app-header">
+        <div class="app-header-inner">
+            <h1 class="app-logo" data-locale="app_name">CityRentals</h1>
+            <p class="app-tagline" data-locale="app_tagline">Delivered for you</p>
+        </div>
+    </header>
+
+    <main class="main-scroll" id="main-scroll">
+        <section class="view active" id="view-browse">
+            <div class="delivery-banner" id="delivery-banner" style="display:none">
+                <div class="pulse"></div>
+                <div>
+                    <strong data-locale="delivery_banner_title">Delivery in progress</strong>
+                    <span data-locale="delivery_banner_sub">Your vehicle is on the way</span>
+                </div>
+            </div>
+
+            <div class="category-scroll-wrap">
+                <div class="category-row" id="category-row"></div>
+            </div>
+            <div class="vehicle-grid" id="vehicle-grid"></div>
+        </section>
+
+        <section class="view" id="view-rent">
+            <button class="back-link" id="rent-back" data-locale="rent_back">&larr; Back</button>
+            <div class="rent-hero" id="rent-hero"></div>
+            <div class="rent-form">
+                <h2 id="rent-title" data-locale="rent_confirm_title">Confirm rental</h2>
+                <label class="field-label" data-locale="label_duration_unit">Duration unit</label>
+                <div class="chip-row" id="duration-units"></div>
+                <label class="field-label" data-locale="label_duration">Duration</label>
+                <input type="number" id="duration-value" min="1" max="30" value="1" class="text-input" />
+                <label class="field-label" data-locale="label_payment">Payment</label>
+                <div class="chip-row" id="payment-methods"></div>
+                <div class="summary-card">
+                    <div><span data-locale="label_delivery">Delivery</span><strong data-locale="delivery_location">Your GPS location</strong></div>
+                    <div><span data-locale="label_total">Total</span><strong id="rent-total">$0</strong></div>
+                </div>
+                <button class="btn-primary" id="btn-confirm-rent" data-locale="btn_confirm_pay">Confirm &amp; pay</button>
+            </div>
+        </section>
+
+        <section class="view" id="view-active">
+            <div id="active-empty" class="empty-state">
+                <h3 data-locale="active_empty_title">No active rental</h3>
+                <p data-locale="active_empty_sub">Browse vehicles and rent one to get started.</p>
+            </div>
+            <div id="active-content" style="display:none">
+                <div class="active-card" id="active-card"></div>
+                <div class="timer-card">
+                    <span data-locale="label_time_remaining">Time remaining</span>
+                    <strong id="active-timer">--</strong>
+                </div>
+                <div class="rent-form extend-form">
+                    <h3 data-locale="extend_title">Extend rental</h3>
+                    <label class="field-label" data-locale="label_duration_unit">Duration unit</label>
+                    <div class="chip-row" id="renew-units"></div>
+                    <label class="field-label" data-locale="label_duration">Duration</label>
+                    <input type="number" id="renew-value" min="1" max="30" value="1" class="text-input" />
+                    <label class="field-label" data-locale="label_payment">Payment</label>
+                    <div class="chip-row" id="renew-payment"></div>
+                    <button class="btn-secondary" id="btn-renew" data-locale="btn_renew">Renew</button>
+                </div>
+                <button class="btn-primary" id="btn-return" data-locale="btn_return">Return vehicle</button>
+            </div>
+        </section>
+
+        <section class="view" id="view-history">
+            <h2 class="section-title" data-locale="history_title">Rental history</h2>
+            <div id="history-list" class="history-list"></div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-tab="browse">
+            <span class="nav-icon"><i class="fas fa-car-side"></i></span>
+            <span class="nav-label" data-locale="nav_browse">Browse</span>
+        </button>
+        <button class="nav-item" data-tab="active">
+            <span class="nav-icon"><i class="fas fa-key"></i></span>
+            <span class="nav-label" data-locale="nav_active">Active</span>
+        </button>
+        <button class="nav-item" data-tab="history">
+            <span class="nav-icon"><i class="fas fa-clock-rotate-left"></i></span>
+            <span class="nav-label" data-locale="nav_history">History</span>
+        </button>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+</div>
+</div>
+<script src="dev.js"></script>
+<script src="script.js"></script>
+<script>
+    window.addEventListener('message', async (e) => {
+        if (e.data === 'componentsLoaded') {
+            await initApp();
+        }
+    });
+</script>
+</body>
+</html>

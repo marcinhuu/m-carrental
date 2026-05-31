@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <rect width="128" height="128" rx="28" fill="#0d9488"/>
+  <path d="M28 72h72l-8-24H36l-8 24z" fill="#fff" opacity=".95"/>
+  <circle cx="42" cy="76" r="10" fill="#0f766e"/>
+  <circle cx="86" cy="76" r="10" fill="#0f766e"/>
+  <circle cx="42" cy="76" r="5" fill="#ecfdf5"/>
+  <circle cx="86" cy="76" r="5" fill="#ecfdf5"/>
+  <text x="64" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="18" fill="#fff">CR</text>
+</svg>
