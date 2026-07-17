@@ -1,14 +1,19 @@
 Config = {}
 
-Config.Framework = 'esx'
+-- Framework: 'qbcore' or 'esx'
+Config.Framework = 'qbcore'
 
 Config.Locale = 'en'
+
+-- Phone: 'auto' | 'lb-phone' | 'sd-phone'
+Config.Phone = 'sd-phone'
 
 Config.AppIdentifier = 'lb-phone-cityrentals'
 Config.AppName = 'CityRentals'
 Config.AppDescription = 'Rent vehicles delivered to your location'
 Config.AppDeveloper = 'CityRentals'
 Config.AppSize = 3.8
+Config.DefaultApp = false
 
 -- Max concurrent active rentals per player
 Config.MaxActiveRentals = 1

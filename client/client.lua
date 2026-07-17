@@ -3,30 +3,77 @@ local trackedVehicle = nil
 local trackedPlate = nil
 local activeRental = nil
 
-local function AddApp()
-    local added, err = exports['lb-phone']:AddCustomApp({
+local function resolveUi()
+    local resource = GetCurrentResourceName()
+    return resource .. '/ui/index.html'
+end
+
+local function buildAppDef()
+    local resource = GetCurrentResourceName()
+    local icon = ('https://cfx-nui-%s/ui/assets/icon.svg'):format(resource)
+    return {
         identifier  = APP_ID,
         name        = Config.AppName,
         description = Config.AppDescription,
         developer   = Config.AppDeveloper,
-        defaultApp  = false,
-        size        = math.floor(Config.AppSize * 1024),
-        images      = {
-            'https://cfx-nui-' .. GetCurrentResourceName() .. '/ui/assets/icon.svg',
-        },
-        ui   = GetCurrentResourceName() .. '/ui/index.html',
-        icon = 'https://cfx-nui-' .. GetCurrentResourceName() .. '/ui/assets/icon.svg',
-        fixBlur = true,
-    })
-    if not added then
-        print('^1[cityrentals] Could not register app: ' .. tostring(err) .. '^0')
+        defaultApp  = Config.DefaultApp == true,
+        size        = math.floor((Config.AppSize or 3.8) * 1024),
+        images      = { icon },
+        ui          = resolveUi(),
+        icon        = icon,
+        fixBlur     = true,
+    }
+end
+
+local function AddApp()
+    local phone = Phone.GetResource()
+    if not phone then return end
+
+    local def = buildAppDef()
+    local ok, err
+
+    if phone == 'sd-phone' then
+        local success, result, resultErr = pcall(function()
+            return exports['sd-phone']:addCustomApp(def)
+        end)
+        if not success then
+            print(('^1[cityrentals] sd-phone addCustomApp error: %s^0'):format(tostring(result)))
+            return
+        end
+        ok, err = result, resultErr
+    else
+        local success, result, resultErr = pcall(function()
+            return exports['lb-phone']:AddCustomApp(def)
+        end)
+        if not success then
+            print(('^1[cityrentals] lb-phone AddCustomApp error: %s^0'):format(tostring(result)))
+            return
+        end
+        ok, err = result, resultErr
+    end
+
+    if not ok then
+        print(('^1[cityrentals] Could not register on %s: %s^0'):format(phone, tostring(err)))
+    else
+        print(('^2[cityrentals] Registered on %s^0'):format(phone))
     end
 end
 
-while GetResourceState('lb-phone') ~= 'started' do Wait(500) end
-AddApp()
+CreateThread(function()
+    local phone = Phone.WaitForStart()
+    Wait(1000)
+    AddApp()
+    print(('^2[cityrentals] Phone backend: %s^0'):format(phone))
+end)
+
 AddEventHandler('onResourceStart', function(res)
-    if res == 'lb-phone' then AddApp() end
+    if res ~= 'sd-phone' and res ~= 'lb-phone' then return end
+    if res == 'lb-phone' and GetResourceState('sd-phone') ~= 'missing' then return end
+    CreateThread(function()
+        while not Phone.GetResource() do Wait(200) end
+        Wait(1000)
+        AddApp()
+    end)
 end)
 
 local function ServerCall(name, data, cb)
@@ -72,11 +119,7 @@ local function DeleteTrackedVehicle()
 end
 
 local function NotifyPhone(content)
-    exports['lb-phone']:SendNotification({
-        app = APP_ID,
-        title = T('notify_app_title'),
-        content = content,
-    })
+    Phone.Notify(T('notify_app_title'), content)
 end
 
 local function SyncActiveRental()

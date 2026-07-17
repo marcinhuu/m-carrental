@@ -122,11 +122,26 @@
 <script src="dev.js"></script>
 <script src="script.js"></script>
 <script>
-    window.addEventListener('message', async (e) => {
-        if (e.data === 'componentsLoaded') {
+    (function () {
+        var started = false;
+        async function start() {
+            if (started) return;
+            started = true;
             await initApp();
         }
-    });
+
+        var devMode = typeof window.invokeNative === 'undefined';
+        if (devMode) {
+            document.documentElement.style.visibility = 'visible';
+            document.body.style.visibility = 'visible';
+            start();
+            return;
+        }
+
+        window.addEventListener('message', function (e) {
+            if (e.data === 'componentsLoaded') start();
+        });
+    })();
 </script>
 </body>
 </html>

@@ -84,11 +84,7 @@ local function CountActiveRentals(citizenid)
 end
 
 local function SendPhoneNotification(source, title, content)
-    exports['lb-phone']:SendNotification(source, {
-        app = Config.AppIdentifier,
-        title = title,
-        content = content,
-    })
+    Phone.NotifyPlayer(source, title, content)
 end
 
 local function SetRentalExpired(rentalId, citizenid, source)

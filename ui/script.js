@@ -582,13 +582,29 @@ async function initApp() {
     initCategoryScroll();
     await loadLocales();
 
-    if (typeof getSettings === 'function' && globalThis.components) {
+    const getSettingsFn = typeof getSettings === 'function' ? getSettings
+        : (typeof GetSettings === 'function' ? GetSettings : null);
+    const onSettingsChangeFn = typeof onSettingsChange === 'function' ? onSettingsChange
+        : (typeof OnSettingsChange === 'function' ? OnSettingsChange : null);
+
+    const applyTheme = (settings) => {
+        if (!settings) return;
+        const theme = (settings.display && settings.display.theme) || settings.theme;
+        if (theme !== 'light' && theme !== 'dark') return;
+        document.querySelector('.app')?.setAttribute('data-theme', theme);
+        document.body?.setAttribute('data-theme', theme);
+    };
+
+    // Dark UI — white status-bar icons on sd-phone
+    const c = globalThis.components;
+    if (c?.setStatusLight) c.setStatusLight(true);
+    else if (c?.setStatusLightOverride) c.setStatusLightOverride(true);
+    else if (c?.fetchPhone) c.fetchPhone('SetStatusLight', true);
+
+    if (getSettingsFn) {
         try {
-            onSettingsChange((settings) => {
-                document.querySelector('.app')?.setAttribute('data-theme', settings.display.theme);
-            });
-            const settings = await getSettings();
-            document.querySelector('.app')?.setAttribute('data-theme', settings.display.theme);
+            if (onSettingsChangeFn) onSettingsChangeFn(applyTheme);
+            applyTheme(await getSettingsFn());
         } catch (_) {}
     }
 

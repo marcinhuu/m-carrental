@@ -73,11 +73,7 @@ local function CleanupDelivery(deleteVehicle)
 end
 
 local function NotifyLb(content)
-    exports['lb-phone']:SendNotification({
-        app = Config.AppIdentifier,
-        title = T('notify_app_title'),
-        content = content,
-    })
+    Phone.Notify(T('notify_app_title'), content)
 end
 
 local function PedSayDelivery(ped)

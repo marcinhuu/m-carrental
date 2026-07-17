@@ -27,6 +27,7 @@ body {
     height: 100%;
     overflow: hidden;
     margin: 0;
+    visibility: hidden;
     background: transparent !important;
 }
 
